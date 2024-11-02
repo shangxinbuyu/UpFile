@@ -1,6 +1,6 @@
 package io.github.sgangxinbuyu.upfile.controller;
 
-import io.github.sgangxinbuyu.upfile.domain.FileVO;
+import io.github.sgangxinbuyu.upfile.domain.po.FileVO;
 import io.github.sgangxinbuyu.upfile.service.ShowFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

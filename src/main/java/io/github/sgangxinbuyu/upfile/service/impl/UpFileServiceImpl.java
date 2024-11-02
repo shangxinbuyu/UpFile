@@ -31,6 +31,10 @@ public class UpFileServiceImpl implements UpFileService {
         receiveFiles(file, properties.getFilePath());
     }
 
+    @Override
+    public void list() {
+    }
+
 
     private void receiveFiles(MultipartFile file, String basePath) {
         LocalDate today = LocalDate.now();

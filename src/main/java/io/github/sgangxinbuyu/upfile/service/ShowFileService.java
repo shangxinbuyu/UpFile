@@ -1,6 +1,6 @@
 package io.github.sgangxinbuyu.upfile.service;
 
-import io.github.sgangxinbuyu.upfile.domain.FileVO;
+import io.github.sgangxinbuyu.upfile.domain.po.FileVO;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 

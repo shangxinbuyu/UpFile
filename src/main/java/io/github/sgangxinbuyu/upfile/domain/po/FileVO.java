@@ -1,4 +1,4 @@
-package io.github.sgangxinbuyu.upfile.domain;
+package io.github.sgangxinbuyu.upfile.domain.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

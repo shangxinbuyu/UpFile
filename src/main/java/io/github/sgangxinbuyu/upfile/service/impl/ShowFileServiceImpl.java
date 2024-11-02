@@ -1,7 +1,7 @@
 package io.github.sgangxinbuyu.upfile.service.impl;
 
 import com.google.gson.Gson;
-import io.github.sgangxinbuyu.upfile.domain.FileVO;
+import io.github.sgangxinbuyu.upfile.domain.po.FileVO;
 import io.github.sgangxinbuyu.upfile.properties.UpFileProperties;
 import io.github.sgangxinbuyu.upfile.service.ShowFileService;
 import lombok.RequiredArgsConstructor;
