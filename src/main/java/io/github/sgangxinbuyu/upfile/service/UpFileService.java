@@ -5,6 +5,4 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UpFileService {
     void acceptFolder(MultipartFile file);
     void acceptFile(MultipartFile file);
-
-    void list();
 }
