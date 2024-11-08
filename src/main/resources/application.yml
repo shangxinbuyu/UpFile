@@ -8,14 +8,30 @@ spring:
       max-file-size: 1GB
       max-request-size: 1GB
   datasource:
-    url: jdbc:mysql://lx496957.ink:3306/up_file?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    url: jdbc:mysql://lx496957.ink:3306/UpFile?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
     username: root
     password: 496957
     driver-class-name: com.mysql.cj.jdbc.Driver
 up-file:
-#  folder-path: /root/Docker/UpFile/upData/folder
-#  file-path: /root/Docker/UpFile/upData/file
-#  show-path: /root/Docker/UpFile/upData
-  folder-path: E:/project/UpFIle/src/main/resources/folder
-  file-path: E:/project/UpFIle/src/main/resources/file
-  show-path: E:/project/UpFIle/src/main/resources
+  folder-path: /root/Docker/UpFile/upData/folder
+  file-path: /root/Docker/UpFile/upData/file
+  show-path: /root/Docker/UpFile/upData
+#  folder-path: E:/project/UpFIle/src/main/resources/folder
+#  file-path: E:/project/UpFIle/src/main/resources/file
+#  show-path: E:/project/UpFIle/src/main/resources
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: lx496957
+  expiration : 3600000
+logging:
+  level:
+    io.github.sgangxinbuyu.upfile:
+      mapper: debug
+      service: info
+      controller: info
