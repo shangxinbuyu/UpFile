@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (user.getStatus().equals("0")) {
             throw new RuntimeException("账号被锁定");
         }
+
 
         String jwt = jwtUtil.generateToken(user.getId().toString());
 

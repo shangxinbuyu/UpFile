@@ -1,7 +1,10 @@
 package io.github.sgangxinbuyu.upfile.Filte;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import io.github.sgangxinbuyu.upfile.context.BaseContext;
+import io.github.sgangxinbuyu.upfile.properties.JwtProperties;
 import io.github.sgangxinbuyu.upfile.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
 
-    final JwtUtil jwtUtil;
+    private final JwtProperties jwtProperties;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -25,14 +28,7 @@ public class JwtFilter implements Filter {
 
         String url = request.getRequestURL().toString();
 
-        // 放行登录请求
-        if (url.contains("login")) {
-            log.info("登录操作放行");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if  (url.contains("upFile")) {
+        if (!(url.contains("/get/download") || url.contains("/get/checkPermission"))) {
             log.info("公开接口放行");
             filterChain.doFilter(request, response);
             return;
@@ -46,11 +42,18 @@ public class JwtFilter implements Filter {
             return;
         }
 
-        // 验证 Token 是否有效
-        if (!jwtUtil.isTokenExpired(token)) {
+
+
+
+        try {
+            log.info("校验JWT:{}", token);
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getSecret(), token);
+            Long id = Long.parseLong(claims.get("id").toString());
+            log.info("当前用户:{}", id);
+            BaseContext.setCurrentId(id);
             filterChain.doFilter(request, response);
-        } else {
-            log.info("Token校验失败");
+        } catch (NumberFormatException | ServletException | IOException e) {
+            response.setStatus(401);
         }
     }
 }

@@ -22,4 +22,5 @@ public class User {
     private String createdTime;
     private String updateTime;
     private String status;
+    private Integer privilege;
 }

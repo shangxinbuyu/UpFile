@@ -1,21 +1,27 @@
 package io.github.sgangxinbuyu.upfile.service.impl;
 
 import com.google.gson.Gson;
+import io.github.sgangxinbuyu.upfile.context.BaseContext;
+import io.github.sgangxinbuyu.upfile.domain.Result;
 import io.github.sgangxinbuyu.upfile.domain.po.FileVO;
+import io.github.sgangxinbuyu.upfile.domain.po.User;
+import io.github.sgangxinbuyu.upfile.mapper.UserMapper;
 import io.github.sgangxinbuyu.upfile.properties.UpFileProperties;
 import io.github.sgangxinbuyu.upfile.service.ShowFileService;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +30,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ShowFileServiceImpl implements ShowFileService {
+    private final UserMapper userMapper;
     private final UpFileProperties properties;
     private final Gson gson;
 
@@ -55,29 +62,49 @@ public class ShowFileServiceImpl implements ShowFileService {
 
 
     @Override
-    public ResponseEntity<InputStreamResource> download(FileVO filePI) {
-        //TODO 判断当前用户权限
-        File file = new File(filePI.getPath());
-
-        if (!file.exists() || !file.isFile()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public Result<String> checkPermission() {
+        Long id = BaseContext.getCurrentId();
+        User user = userMapper.getById(id);
+        if (user.getPrivilege() != -1) {
+            log.info("权限不够");
+            return Result.success("权限不够");
         }
+        return Result.success();
+    }
+
+    @Override
+    public void download(String relativePath, HttpServletResponse response) {
+        Long id = BaseContext.getCurrentId();
+        User user = userMapper.getById(id);
+
+        // 判断用户权限
+        if (user.getPrivilege() != -1) {
+            return;
+        }
+        String[] split = relativePath.split("/");
+        String fileName = split[split.length - 1];
+        File file = new File(properties.getShowPath() + relativePath);
 
         try {
-            InputStream inputStream = new FileInputStream(file);
-            InputStreamResource resource = new InputStreamResource(inputStream);
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                    .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()))
-                    .body(resource);
-        } catch (FileNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            ServletOutputStream os = response.getOutputStream();
+            // 设置响应头为文件处理方式
+            response.addHeader("Content-Disposition", "attachment;filename=" + fileName + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
+            // 设置响应头为二进制流
+            response.setContentType("application/octet-stream");
+            // 写入内容到响应体
+            os.write(FileUtil.readBytes(file));
+            os.close();
+            os.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
+
 
     /**
      * 遍历文件夹内容
+     *
      * @param fileName 文件夹相对路径
      * @return FileVO集合
      */
@@ -112,6 +139,7 @@ public class ShowFileServiceImpl implements ShowFileService {
 
     /**
      * 判断是否为纯数字
+     *
      * @param str 被判断的字符串
      * @return 是否为纯数字
      */

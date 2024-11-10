@@ -1,15 +1,14 @@
 package io.github.sgangxinbuyu.upfile.controller;
 
+import io.github.sgangxinbuyu.upfile.domain.Result;
 import io.github.sgangxinbuyu.upfile.domain.po.FileVO;
 import io.github.sgangxinbuyu.upfile.service.ShowFileService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @Slf4j
@@ -28,9 +27,26 @@ public class ShowFile {
 
     }
 
-    @PostMapping("/download")
-    public ResponseEntity<InputStreamResource> downloadFile(@RequestBody FileVO filePI) {
-        log.info(filePI.getPath());
-        return showFileService.download(filePI);
+    @GetMapping("/checkPermission")
+    public Result<String> checkPermission() {
+        log.info("权限校验");
+        return showFileService.checkPermission();
+    }
+
+    @GetMapping("/download")
+    public void download(@RequestParam String relativePath, HttpServletResponse response) throws IOException {
+        log.info("文件下载:{}", relativePath);
+        showFileService.download(relativePath,response);
+//        String[] split = relativePath.split("/");
+//        String fileName = split[split.length - 1];
+//
+//        File file = new File("E:\\project\\UpFIle\\src\\main\\resources\\" + fileName);
+//
+//        ServletOutputStream out = response.getOutputStream();
+//        response.addHeader("Content-Disposition", "attachment;filename=" + fileName + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
+//        response.setContentType("application/octet-stream");
+//        out.write(FileUtil.readBytes(file));
+//        out.flush();
+//        out.close();
     }
 }
