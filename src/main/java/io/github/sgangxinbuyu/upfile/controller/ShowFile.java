@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequestMapping("/get")
 public class ShowFile {
 
-    private final ShowFileService showFileService;
+        private final ShowFileService showFileService;
 
     @PostMapping("/fileList")
     public String showFile(@RequestBody FileVO fileName) {

@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.sgangxinbuyu</groupId>
     <artifactId>UpFIle</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>UpFIle</name>
     <description>UpFIle</description>
     <url/>

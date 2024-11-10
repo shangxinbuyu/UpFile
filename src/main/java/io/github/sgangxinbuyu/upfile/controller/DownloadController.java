@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -22,7 +23,7 @@ public class DownloadController {
     private final UpFileProperties properties;
     @PostMapping
     public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String path = properties.getShowPath() + request.getHeader("filePath");
+        String path = properties.getShowPath() + URLDecoder.decode(request.getHeader("filePath"), StandardCharsets.UTF_8);
 
         File file = new File(path);
         request.setCharacterEncoding("utf-8");

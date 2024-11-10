@@ -13,12 +13,12 @@ spring:
     password: 496957
     driver-class-name: com.mysql.cj.jdbc.Driver
 up-file:
-#  folder-path: /root/Docker/UpFile/upData/folder
-#  file-path: /root/Docker/UpFile/upData/file
-#  show-path: /root/Docker/UpFile/upData
-  folder-path: E:/project/UpFIle/src/main/resources/folder
-  file-path: E:/project/UpFIle/src/main/resources/file
-  show-path: E:/project/UpFIle/src/main/resources
+  folder-path: /root/Docker/UpFile/upData/folder
+  file-path: /root/Docker/UpFile/upData/file
+  show-path: /root/Docker/UpFile/upData
+#  folder-path: E:/project/UpFIle/src/main/resources/folder
+#  file-path: E:/project/UpFIle/src/main/resources/file
+#  show-path: E:/project/UpFIle/src/main/resources
 mybatis-plus:
   global-config:
     db-config:
